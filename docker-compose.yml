@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: "2"
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.1
@@ -10,8 +10,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - proxynet
 
   broker:
     image: confluentinc/cp-kafka:6.1.1
@@ -25,7 +23,7 @@ services:
       - "9101:9101"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -34,8 +32,6 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: localhost
-    networks:
-      - proxynet
 
   schema-registry:
     image: confluentinc/cp-schema-registry:6.1.1
@@ -47,13 +43,12 @@ services:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "broker:29092"
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-    networks:
-      - proxynet
 
   connect:
-    image: connect-custom:1.0.0
+    # image: connect-custom:1.0.0
+    build: ./custom-kafka-connectors-image
     hostname: connect
     container_name: connect
     depends_on:
@@ -63,7 +58,7 @@ services:
       - "8083:8083"
     env_file: .env_kafka_connect
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONNECT_BOOTSTRAP_SERVERS: "broker:29092"
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: compose-connect-group
@@ -79,9 +74,6 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
-    networks:
-      - proxynet
-
 
   ksqldb-server:
     image: confluentinc/cp-ksqldb-server:6.1.1
@@ -103,10 +95,8 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       KSQL_KSQL_CONNECT_URL: "http://connect:8083"
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: 1
-      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
-      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
-    networks:
-      - proxynet
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
 
   ksqldb-cli:
     image: confluentinc/cp-ksqldb-cli:6.1.1
@@ -117,8 +107,6 @@ services:
       - ksqldb-server
     entrypoint: /bin/sh
     tty: true
-    networks:
-      - proxynet
 
   ksql-datagen:
     image: confluentinc/ksqldb-examples:6.1.1
@@ -130,19 +118,17 @@ services:
       - schema-registry
       - connect
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:29092 1 40 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8081 40 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 11 && \
-                       tail -f /dev/null'"
+      cub kafka-ready -b broker:29092 1 40 && \
+      echo Waiting for Confluent Schema Registry to be ready... && \
+      cub sr-ready schema-registry 8081 40 && \
+      echo Waiting a few seconds for topic creation to finish... && \
+      sleep 11 && \
+      tail -f /dev/null'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       STREAMS_BOOTSTRAP_SERVERS: broker:29092
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
-    networks:
-      - proxynet
 
   rest-proxy:
     image: confluentinc/cp-kafka-rest:6.1.1
@@ -155,11 +141,9 @@ services:
     container_name: rest-proxy
     environment:
       KAFKA_REST_HOST_NAME: rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
+      KAFKA_REST_BOOTSTRAP_SERVERS: "broker:29092"
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
-      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-    networks:
-      - proxynet
+      KAFKA_REST_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
 
   postgres:
     image: postgres:13.2
@@ -167,11 +151,7 @@ services:
       - 5432:5432
     hostname: postgres
     container_name: postgres
-    environment: 
-      POSTGRES_PASSWORD: Ney1987
-    networks:
-      - proxynet
-
-networks:
-  proxynet:
-    name: custom_network
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - $PWD:/home/config
