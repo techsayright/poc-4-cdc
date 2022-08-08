@@ -179,7 +179,7 @@ CREATE TABLE research_ave_boost AS \
 ```
 
 ## Add a connector to sink a KSQL table to s3
-
+note: s3 bucket should be created before run below command
 ```
 curl -X POST -H "Accept:application/json" -H "Content-Type: application/json" \
       --data @s3-sink.json http://localhost:8083/connectors
