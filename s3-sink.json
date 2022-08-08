@@ -12,6 +12,6 @@
     "topics.dir": "raw-data/kafka",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
     "tasks.max": 1,
-    "topics": "psg-admission"
+    "topics": "TOPIC-NAME"
   }
 }

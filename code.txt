@@ -134,6 +134,9 @@ SHOW STREAMS;
 
 CREATE TABLE admission (student_id INTEGER, gre INTEGER, toefl INTEGER, cpga DOUBLE, admit_chance DOUBLE)\
 WITH (KAFKA_TOPIC='ADMISSION_SRC_REKEY', VALUE_FORMAT='AVRO', KEY='student_id');
+                                                      OR
+CREATE TABLE admission (student_id INTEGER PRIMARY KEY, gre INTEGER, toefl INTEGER, cpga DOUBLE, admit_chance DOUBLE)\
+WITH (KAFKA_TOPIC='ADMISSION_SRC_REKEY', VALUE_FORMAT='AVRO');
 
 SHOW TABLES;
 
