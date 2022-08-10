@@ -130,11 +130,43 @@ services:
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
-  postgres:
-    image: debezium/postgres:11
+  ##ALL SOURCES ADDED HERE
+  # mysql:
+  #   build: ./src_mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: mysql
+  #     MYSQL_HOST: mysql
+  #     MYSQL_USER: mysql
+  #     MYSQL_PASSWORD: mysql
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - $PWD:/home/config
+
+  mysql:
+    # image: mysql:5.7
+    build: ./src_mysql
+    ports:
+      - "3306:3306"
+    container_name: mysql
     environment:
+      MYSQL_DATABASE: students
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      MYSQL_ROOT_HOST: mysql
+      MYSQL_HOST: mysql
+    volumes:
+      - $PWD:/home/config
+
+  postgres:
+    # image: debezium/postgres:11
+    build: ./src_postgres
+    environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    command: postgres -c config_file=/home/config/postgresql.conf
+      POSTGRES_HOST: postgres
+    command: postgres -c config_file=/home/config/src_postgres/postgresql.conf
     ports:
       - 5432:5432
     volumes:

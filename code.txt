@@ -3,7 +3,7 @@ docker-compose up -d
 ## Loading data into Postgres
 
 docker run -it --rm --network=poc-4-cdc_default \
-         -v "$PWD":/home/config/ \
+         -v "$PWD":/home/config/Data \
          debezium/postgres:11 psql -h postgres -U postgres
 
 Password = postgres
@@ -22,10 +22,12 @@ CREATE TABLE admission
 (student_id INTEGER, gre INTEGER, toefl INTEGER, cpga DOUBLE PRECISION, admit_chance DOUBLE PRECISION,
 CONSTRAINT student_id_pk PRIMARY KEY (student_id));
 
-\copy admission FROM '/home/config/admit_1.csv' DELIMITER ',' CSV HEADER;
+\copy admission FROM '/home/config/Data/admit_1.csv' DELIMITER ',' CSV HEADER;
 ```
 
 insert into admission values ( 12345, 98, 98, 0.09,0.87);
+update admission set gre = 99 where student_id = 12345;
+delete from admission where student_id = 12345;
 
 
 Load the research data table with:
@@ -35,7 +37,7 @@ CREATE TABLE research
 (student_id INTEGER, rating INTEGER, research INTEGER,
 PRIMARY KEY (student_id));
 
-\copy research FROM '/home/config/research_1.csv' DELIMITER ',' CSV HEADER;
+\copy research FROM '/home/config/Data/research_1.csv' DELIMITER ',' CSV HEADER;
 ```
 
 
