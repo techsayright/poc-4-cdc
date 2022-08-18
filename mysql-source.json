@@ -1,23 +1,20 @@
 {
-  "name": "mysql-source3",
+  "name": "mysql-source",
   "config": {
     "connector.class": "io.debezium.connector.mysql.MySqlConnector",
     "tasks.max": "1",
     "database.hostname": "mysql",
     "database.port": "3306",
-    "database.user": "mysql",
-    "database.password": "mysql",
-    "database.dbname": "students",
-    "database.server.id": "223344",
-    "database.server.name": "dbserver1",
-    "database.history.kafka.bootstrap.servers": "localhost:9093",
-    "database.history.kafka.topic": "students.mysql",
-    "include.schema.changes": "true",
-    "plugin.name": "wal2json",
+    "database.user": "debezium",
+    "database.password": "debeziumpw",
+    "database.server.name": "local",
+    "database.include.list": "students",
     "transforms": "unwrap",
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
-    "transforms.unwrap.drop.tombstones": "false",
+    "transforms.unwrap.drop.tombstones": "true",
+    "transforms.unwrap.add.fields": "op,source.ts_ms",
     "transforms.unwrap.delete.handling.mode": "rewrite",
-    "transforms.unwrap.add.fields": "table,lsn"
+    "database.history.kafka.bootstrap.servers": "broker1:19093",
+    "database.history.kafka.topic": "schema-changes.students"
   }
 }

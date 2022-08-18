@@ -232,12 +232,9 @@ services:
       - "3306:3306"
     container_name: mysql
     environment:
-      MYSQL_DATABASE: students
-      MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_USER: mysql
-      MYSQL_PASSWORD: mysql
-      MYSQL_ROOT_HOST: mysql
-      MYSQL_HOST: mysql
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
     volumes:
       - $PWD:/home/config
 
@@ -253,3 +250,27 @@ services:
       - 5432:5432
     volumes:
       - $PWD:/home/config
+
+  mongo1:
+    image: "mongo:4.0"
+    container_name: mongo1
+    command: --replSet rs0 --smallfiles --oplogSize 128
+    volumes:
+      - rs1:/data/db
+    ports:
+      - "27017:27017"
+    restart: always
+
+  mongo2:
+    image: "mongo:4.0"
+    container_name: mongo2
+    command: --replSet rs0 --smallfiles --oplogSize 128
+    volumes:
+      - rs2:/data/db
+    ports:
+      - "27018:27017"
+    restart: always
+
+volumes:
+  rs1:
+  rs2:
