@@ -251,6 +251,15 @@ services:
     volumes:
       - $PWD:/home/config
 
+  producer:
+    build: ./producer
+    depends_on:
+      - zookeeper
+      - broker0
+      - broker1
+      - broker2
+      - schema-registry
+
   mongo1:
     image: "mongo:4.0"
     container_name: mongo1
