@@ -1,5 +1,5 @@
 {
-  "name": "s3-sink",
+  "name": "s3-sink2",
   "config": {
     "connector.class": "io.confluent.connect.s3.S3SinkConnector",
     "format.class": "io.confluent.connect.s3.format.parquet.ParquetFormat",
@@ -12,6 +12,6 @@
     "topics.dir": "raw-data/kafka",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
     "tasks.max": 1,
-    "topics": "TOPIC-NAME"
+    "topics": "RESEARCH_BOOST"
   }
 }

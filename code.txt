@@ -134,22 +134,19 @@ SHOW STREAMS;
 
 ##it will also create new table nd topic named ADMISSION_SRC_REKEY
 
-CREATE TABLE admission (student_id INTEGER, gre INTEGER, toefl INTEGER, cpga DOUBLE, admit_chance DOUBLE)\
-WITH (KAFKA_TOPIC='ADMISSION_SRC_REKEY', VALUE_FORMAT='AVRO', KEY='student_id');
-                                                      OR
 CREATE TABLE admission (student_id INTEGER PRIMARY KEY, gre INTEGER, toefl INTEGER, cpga DOUBLE, admit_chance DOUBLE)\
 WITH (KAFKA_TOPIC='ADMISSION_SRC_REKEY', VALUE_FORMAT='AVRO');
 
 SHOW TABLES;
 
 CREATE STREAM research_src (student_id INTEGER, rating INTEGER, research INTEGER)\
-WITH (KAFKA_TOPIC='dbserver1.public.research', VALUE_FORMAT='AVRO');
+WITH (KAFKA_TOPIC='local.students.research', VALUE_FORMAT='AVRO');
 
 CREATE STREAM research_src_rekey WITH (PARTITIONS=1) AS \
 SELECT * FROM research_src PARTITION BY student_id;
 
-CREATE TABLE research (student_id INTEGER, rating INTEGER, research INTEGER)\
-WITH (KAFKA_TOPIC='RESEARCH_SRC_REKEY', VALUE_FORMAT='AVRO', KEY='student_id');
+CREATE TABLE research (student_id INTEGER PRIMARY KEY, rating INTEGER, research INTEGER)\
+WITH (KAFKA_TOPIC='RESEARCH_SRC_REKEY', VALUE_FORMAT='AVRO');
 ```
 
 Currently KSQL uses uppercase casing convention for stream, table, and field
@@ -173,18 +170,16 @@ and another table calculating the average chance of admission for
 students with and without research experience:
 
 ```
-CREATE TABLE research_ave_boost AS \
-     SELECT research, SUM(admit_chance)/COUNT(admit_chance) as ave_chance \
-     FROM research_boost \
-     WITH (KAFKA_TOPIC='research_ave_boost', VALUE_FORMAT='delimited', KEY='research') \
-     GROUP BY research;
+CREATE TABLE research_ave_boost WITH (KAFKA_TOPIC='research_ave_boost', VALUE_FORMAT='AVRO') AS SELECT research, SUM(admit_chance)/COUNT(admit_chance) as ave_chance FROM research_boost GROUP BY research;
+
+
 ```
 
 ## Add a connector to sink a KSQL table to s3
 note: s3 bucket should be created before run below command
 ```
 curl -X POST -H "Accept:application/json" -H "Content-Type: application/json" \
-      --data @s3-sink.json http://localhost:8083/connectors
+--data @custom-connectors/connectors/s3-sink.json http://localhost:8083/connectors
 ```
 
 ## Update the source Postgres tables and watch the s3 bucket update

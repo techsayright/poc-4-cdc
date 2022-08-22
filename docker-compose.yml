@@ -266,6 +266,8 @@ services:
     command: --replSet rs0 --smallfiles --oplogSize 128
     volumes:
       - rs1:/data/db
+      - ./mongo/init.sh:/usr/local/bin/init.sh
+      - $PWD:/home/config
     ports:
       - "27017:27017"
     restart: always
