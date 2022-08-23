@@ -8,13 +8,13 @@
     "database.user": "debezium",
     "database.password": "debeziumpw",
     "database.server.name": "local",
-    "database.include.list": "students",
+    "database.include.list": "class",
     "transforms": "unwrap",
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
     "transforms.unwrap.drop.tombstones": "true",
     "transforms.unwrap.add.fields": "op,source.ts_ms",
     "transforms.unwrap.delete.handling.mode": "rewrite",
     "database.history.kafka.bootstrap.servers": "broker1:19093",
-    "database.history.kafka.topic": "schema-changes.students"
+    "database.history.kafka.topic": "schema-changes.class"
   }
 }

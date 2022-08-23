@@ -1,9 +1,7 @@
-CREATE DATABASE students;
-\connect students;
+CREATE DATABASE class;
+\connect class;
 
-CREATE TABLE admission
-(student_id INTEGER, gre INTEGER, toefl INTEGER, cpga DOUBLE PRECISION, admit_chance DOUBLE PRECISION,
-CONSTRAINT student_id_pk PRIMARY KEY (student_id));
+CREATE TABLE subjects (subject_id INTEGER PRIMARY KEY, subject_name TEXT, course_id INTEGER );
 
-\copy admission FROM '/home/config/Data/admit_1.csv' DELIMITER ',' CSV HEADER;
+\copy subjects FROM '/home/config/Data/subject.csv' DELIMITER ',' CSV HEADER;
 

@@ -122,6 +122,8 @@ print 'topic' from beginning;
 CREATE STREAM admission_src (student_id INTEGER, gre INTEGER, toefl INTEGER, cpga DOUBLE, admit_chance DOUBLE)\
 WITH (KAFKA_TOPIC='dbserver1.public.admission', VALUE_FORMAT='AVRO');
 
+#create stream courses_src (course_id INTEGER, course_name STRING) WITH (KAFKA_TOPIC='demo.mydb.courses', VALUE_FORMAT='AVRO');
+
 select * from admission_src emit changes;
 
 
@@ -201,3 +203,14 @@ db.colors.insert([
 ]);
 
 db.colors.find().pretty()
+
+
+
+SELECT courses.course_name, \
+    subjects.subject_name, \
+    chapters.chapter_name, \
+    subchapters.subchapter_name \
+FROM courses \
+LEFT JOIN subjects ON courses.course_id = subjects.course_id
+LEFT JOIN chapters ON subjects.subject_id = chapters.subject_id
+LEFT JOIN subchapters ON chapters.chapter_id = subchapters.chapter_id emit changes;
