@@ -214,3 +214,35 @@ FROM courses \
 LEFT JOIN subjects ON courses.course_id = subjects.course_id
 LEFT JOIN chapters ON subjects.subject_id = chapters.subject_id
 LEFT JOIN subchapters ON chapters.chapter_id = subchapters.chapter_id emit changes;
+
+
+
+CREATE stream class_boost AS \
+    SELECT c.course_name as course_name, \
+        s.subject_name as subject_name, \
+        ch.chapter_name as chapter_name, \
+        sc.subchapter_name as subchapter_name \
+    FROM courses c\
+    LEFT JOIN subjects s ON c.course_id = s.subject_id
+    LEFT JOIN chapters ch ON s.subject_id = ch.chapter_id
+    LEFT JOIN subchapters sc ON ch.chapter_id = sc.subchapter_id emit changes;
+
+
+CREATE TABLE course_sub AS SELECT courses.course_name,subjects.subject_name FROM courses LEFT JOIN subjects ON courses.course_id = subjects.course_id;
+
+
+  SELECT a.student_id as student_id, \
+         a.admit_chance as admit_chance, \
+         r.research as research \
+  FROM admission a \
+  LEFT JOIN research r on a.student_id = r.student_id;
+
+
+  CREATE stream course_sub AS SELECT c.course_name,s.subject_name FROM courses c left JOIN subjects s on c.course_id = s.subject_id;
+
+----------------
+  CREATE table course_sub AS SELECT courses.course_id as course_id, course_name, subjects.course_id as subject_id, subject_name FROM courses INNER JOIN subjects ON courses.course_id = subjects.subject_id;
+
+  CREATE table chap_sub AS SELECT chapters.chapter_id as chapter_id, chapter_name, subject_id, subchapters.chapter_id as subchapter_id, subchapter_name  FROM chapters INNER JOIN subchapters ON chapters.chapter_id = subchapters.subchapter_id;
+
+  create table class_boost AS select course_id, course_name, chap_sub.subject_id, subject_name, chapter_id, chapter_name, subchapters.subject_id as subchapter_id, subchapter_name from course_sub inner join chap_sub on course_sub.subject_id = chap_sub.subchapter_id;
