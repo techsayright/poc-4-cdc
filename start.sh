@@ -42,7 +42,7 @@ docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
     set 'cache.max.bytes.buffering'='10000000';
     set 'auto.offset.reset'='earliest';
 
-    CREATE STREAM courses_src (course_id INTEGER, course_name STRING) WITH (KAFKA_TOPIC='demo.mydb.courses', VALUE_FORMAT='AVRO');
+    CREATE STREAM courses_src (course_id INTEGER, course_name STRING) WITH (KAFKA_TOPIC='demo.class.courses', VALUE_FORMAT='AVRO');
 
     CREATE STREAM courses_src_rekey WITH (PARTITIONS=1) AS \ SELECT * FROM courses_src PARTITION BY course_id;
 
