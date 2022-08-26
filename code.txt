@@ -245,4 +245,5 @@ CREATE TABLE course_sub AS SELECT courses.course_name,subjects.subject_name FROM
 
   CREATE table chap_sub AS SELECT chapters.chapter_id as chapter_id, chapter_name, subject_id, subchapters.chapter_id as subchapter_id, subchapter_name  FROM chapters INNER JOIN subchapters ON chapters.chapter_id = subchapters.subchapter_id;
 
-  create table class_boost AS select course_id, course_name, chap_sub.subject_id, subject_name, chapter_id, chapter_name, subchapters.subject_id as subchapter_id, subchapter_name from course_sub inner join chap_sub on course_sub.subject_id = chap_sub.subchapter_id;
+  CREATE table class_boost AS SELECT course_id, course_name, chap_sub.subject_id as subject_id, subject_name, chapter_id, chapter_name, subchapter_id, subchapter_name FROM course_sub INNER JOIN chap_sub ON course_sub.course_id = chap_sub.chapter_id;
+
