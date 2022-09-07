@@ -4,6 +4,7 @@ Fully reproducible, Dockerized, step-by-step, demo on how to stream tables from 
 to run------------
 
 sudo chmod +x start.sh
+
 sudo chmod +x kafka_query.sh
 
 ./start.sh
