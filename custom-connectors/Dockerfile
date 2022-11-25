@@ -1,4 +1,4 @@
-FROM confluentinc/cp-kafka-connect-base
+FROM confluentinc/cp-kafka-connect-base:latest
 
 RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest \
     && confluent-hub install --no-prompt debezium/debezium-connector-mysql:latest \

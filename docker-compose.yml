@@ -2,7 +2,7 @@
 version: "2"
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.1.1
+    image: confluentinc/cp-zookeeper:latest
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   # broker:
-  #   image: confluentinc/cp-kafka:6.1.1
+  #   image: confluentinc/cp-kafka:latest
   #   hostname: broker
   #   container_name: broker
   #   depends_on:
@@ -35,7 +35,7 @@ services:
   #     KAFKA_JMX_HOSTNAME: localhost
 
   broker0:
-    image: confluentinc/cp-enterprise-kafka:5.1.2
+    image: confluentinc/cp-enterprise-kafka:latest
     hostname: broker0
     ports:
       - "9092:9092"
@@ -56,7 +56,7 @@ services:
       - zookeeper
 
   broker1:
-    image: confluentinc/cp-enterprise-kafka:5.1.2
+    image: confluentinc/cp-enterprise-kafka:latest
     hostname: broker1
     ports:
       - "9093:9093"
@@ -78,7 +78,7 @@ services:
       - broker0
 
   broker2:
-    image: confluentinc/cp-enterprise-kafka:5.1.2
+    image: confluentinc/cp-enterprise-kafka:latest
     hostname: broker2
     ports:
       - "9094:9094"
@@ -100,7 +100,7 @@ services:
       - broker1
 
   # schema-registry:
-  #   image: confluentinc/cp-schema-registry:6.1.1
+  #   image: confluentinc/cp-schema-registry:latest
   #   hostname: schema-registry
   #   container_name: schema-registry
   #   depends_on:
@@ -113,7 +113,7 @@ services:
   #     SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.1.2
+    image: confluentinc/cp-schema-registry:latest
     hostname: schema-registry
     depends_on:
       - zookeeper
@@ -163,7 +163,7 @@ services:
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   ksqldb-server:
-    image: confluentinc/cp-ksqldb-server:6.1.1
+    image: confluentinc/cp-ksqldb-server:latest
     hostname: ksqldb-server
     container_name: ksqldb-server
     depends_on:
@@ -188,7 +188,7 @@ services:
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
 
   ksqldb-cli:
-    image: confluentinc/cp-ksqldb-cli:6.1.1
+    image: confluentinc/cp-ksqldb-cli:latest
     container_name: ksqldb-cli
     depends_on:
       - broker0
@@ -200,7 +200,7 @@ services:
     tty: true
 
   ksql-datagen:
-    image: confluentinc/ksqldb-examples:6.1.1
+    image: confluentinc/ksqldb-examples:latest
     hostname: ksql-datagen
     container_name: ksql-datagen
     depends_on:

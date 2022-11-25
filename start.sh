@@ -38,11 +38,18 @@ sleep 45
 docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
     show topics;
 
-    set 'commit.interval.ms'='2000';
+    set 'commit.interval.ms'='5000';
     set 'cache.max.bytes.buffering'='10000000';
     set 'auto.offset.reset'='earliest';
 
-    CREATE STREAM courses_src (course_id INTEGER, course_name STRING) WITH (KAFKA_TOPIC='demo.class.courses', VALUE_FORMAT='AVRO');
+    CREATE STREAM courses_src WITH (KAFKA_TOPIC='demo.class.courses', VALUE_FORMAT='AVRO');
+
+    CREATE OR REPLACE STREAM courses_src_new WITH (
+    kafka_topic = 'courses_src_new',
+    VALUE_FORMAT='AVRO'
+)   AS
+    SELECT *, rowtime AS time FROM courses_src
+    EMIT CHANGES;
 
     CREATE STREAM courses_src_rekey WITH (PARTITIONS=1) AS \ SELECT * FROM courses_src PARTITION BY course_id;
 
@@ -50,7 +57,14 @@ docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
 
 
 
-    CREATE STREAM subjects_src (subject_id INTEGER, subject_name STRING, course_id INTEGER) WITH (KAFKA_TOPIC='dbserver1.public.subjects', VALUE_FORMAT='AVRO');
+    CREATE STREAM subjects_src WITH (KAFKA_TOPIC='dbserver1.public.subjects', VALUE_FORMAT='AVRO');
+
+    CREATE OR REPLACE STREAM subjects_src_new WITH (
+    kafka_topic = 'subjects_src_new',
+    VALUE_FORMAT='AVRO'
+)   AS
+    SELECT *, rowtime AS time FROM subjects_src
+    EMIT CHANGES;
 
     CREATE STREAM subjects_src_rekey WITH (PARTITIONS=1) AS \ SELECT * FROM subjects_src PARTITION BY subject_id;
 
@@ -58,7 +72,14 @@ docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
 
 
     
-    CREATE STREAM chapters_src (chapter_id INTEGER, chapter_name STRING, subject_id INTEGER) WITH (KAFKA_TOPIC='local.class.chapters', VALUE_FORMAT='AVRO');
+    CREATE STREAM chapters_src WITH (KAFKA_TOPIC='local.class.chapters', VALUE_FORMAT='AVRO');
+
+    CREATE OR REPLACE STREAM chapters_src_new WITH (
+    kafka_topic = 'chapters_src_new',
+    VALUE_FORMAT='AVRO'
+)   AS
+    SELECT *, rowtime AS time FROM chapters_src
+    EMIT CHANGES;
 
     CREATE STREAM chapters_src_rekey WITH (PARTITIONS=1) AS \ SELECT * FROM chapters_src PARTITION BY chapter_id;
 
@@ -67,6 +88,13 @@ docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
    
    
     CREATE STREAM subchapters_src (subchapter_id INTEGER, subchapter_name STRING, chapter_id INTEGER) WITH (KAFKA_TOPIC='file.subchap', VALUE_FORMAT='JSON');
+
+    CREATE OR REPLACE STREAM subchapters_src_new WITH (
+    kafka_topic = 'subchapters_src_new',
+    VALUE_FORMAT='AVRO'
+)   AS
+    SELECT *, rowtime AS time FROM subchapters_src
+    EMIT CHANGES;
 
     CREATE STREAM subchapters_src_rekey WITH (PARTITIONS=1) AS \ SELECT * FROM subchapters_src PARTITION BY chapter_id;
 

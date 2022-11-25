@@ -14,6 +14,8 @@
     "plugin.name": "wal2json",
     "transforms": "mongoflatten",
     "transforms.mongoflatten.type": "io.debezium.connector.mongodb.transforms.ExtractNewDocumentState",
-    "transforms.mongoflatten.drop.tombstones": false
+    "transforms.mongoflatten.drop.tombstones": false,
+    "transforms.mongoflatten.delete.handling.mode": "rewrite",
+    "transforms.mongoflatten.add.headers": "op"
   }
 }

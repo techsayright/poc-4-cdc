@@ -247,3 +247,27 @@ CREATE TABLE course_sub AS SELECT courses.course_name,subjects.subject_name FROM
 
   CREATE table class_boost AS SELECT course_id, course_name, chap_sub.subject_id as subject_id, subject_name, chapter_id, chapter_name, subchapter_id, subchapter_name FROM course_sub INNER JOIN chap_sub ON course_sub.course_id = chap_sub.chapter_id;
 
+select *, rowtime from subchapters_src emit changes;
+
+
+CREATE TABLE course_sub AS SELECT courses.course_id as course_id, course_name, subjects.course_id as subject_id, subject_name FROM courses INNER JOIN subjects ON courses.course_id = subjects.subject_id;
+
+CREATE OR REPLACE STREAM course_sub WITH (
+    kafka_topic = 'subchapters_src_new',
+    VALUE_FORMAT='AVRO'
+)   AS
+    SELECT *, rowtime AS time FROM subchapters_src
+    EMIT CHANGES;
+
+CREATE OR REPLACE STREAM class_boost WITH (
+    kafka_topic = 'CLASS_BOOST',
+    VALUE_FORMAT='AVRO'
+)   AS 
+    SELECT c.course_name as course_name, \
+        s.subject_name as subject_name, \
+        ch.chapter_name as chapter_name, \
+        sc.subchapter_name as subchapter_name \
+    FROM courses_src_new c\
+    LEFT JOIN subjects_src_new s ON c.course_id = s.subject_id
+    LEFT JOIN chapters_src_new ch ON s.subject_id = ch.chapter_id
+    LEFT JOIN subchapters_src_new sc ON ch.chapter_id = sc.subchapter_id emit changes;
