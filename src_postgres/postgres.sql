@@ -1,7 +1,7 @@
 CREATE DATABASE class;
 \connect class;
 
-CREATE TABLE subjects (subject_id INTEGER PRIMARY KEY, subject_name TEXT, course_id INTEGER );
+CREATE TABLE student (_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT );
 
-\copy subjects FROM '/home/config/Data/subject.csv' DELIMITER ',' CSV HEADER;
+\copy student FROM '/home/config/Data/student3.csv' DELIMITER ',' CSV HEADER;
 

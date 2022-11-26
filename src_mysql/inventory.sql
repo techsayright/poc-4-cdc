@@ -7,13 +7,13 @@ FLUSH PRIVILEGES;
 -- Switch to this database
 USE class;
 
-CREATE TABLE chapters
-(chapter_id INTEGER, chapter_name TEXT, subject_id INTEGER,
-PRIMARY KEY (chapter_id));
+CREATE TABLE student
+(_id INTEGER, first_name TEXT, last_name TEXT,
+PRIMARY KEY (_id));
 
 
-LOAD DATA INFILE '/home/config/Data/chapter.csv'
-INTO TABLE chapters
+LOAD DATA INFILE '/home/config/Data/student2.csv'
+INTO TABLE student
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
