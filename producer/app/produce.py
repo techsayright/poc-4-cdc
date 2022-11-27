@@ -4,7 +4,7 @@ from kafka import KafkaProducer
 import csv
 
 # initializing the Kafka producer
-sleep(5)
+sleep(8)
 my_producer = KafkaProducer(
     bootstrap_servers=['broker0:19092'],
     value_serializer=lambda x:dumps(x).encode('utf-8')
