@@ -13,6 +13,8 @@
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
     "transforms.unwrap.drop.tombstones": "true",
     "transforms.unwrap.add.headers": "op",
-    "transforms.unwrap.delete.handling.mode": "rewrite"
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "database.history.kafka.bootstrap.servers": "broker1:19093",
+    "database.history.kafka.topic": "schema-changes.class"
   }
 }

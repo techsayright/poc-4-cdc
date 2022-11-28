@@ -33,8 +33,8 @@ echo Starting all services------------------
 docker-compose up -d
 
 echo "Running KSQL Scripts(Please Wait)-------------------"
-sleep 45
+# sleep 70
 
-./ksql.sh
+# ./ksql.sh
 
 echo completed process

@@ -197,12 +197,12 @@ docker exec -it mongo1 bash
 #to start mongo
 mongo
 
-use mydb
-db.colors.insert([
-{ _id : 1005, first_name : 'Bob', last_name : 'Hopper', email : 'thebob@example.com' }
+use class
+db.student.insert([
+{ _id : 105, first_name : 'Bob', last_name : 'Hopper' }
 ]);
 
-db.colors.find().pretty()
+db.student.find().pretty()
 
 
 

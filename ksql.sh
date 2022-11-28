@@ -44,7 +44,7 @@ docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
 
     CREATE OR REPLACE STREAM student4_src WITH (
     kafka_topic = 'student4_src',
-    VALUE_FORMAT='AVRO'
+    VALUE_FORMAT='JSON'
 )   AS
     SELECT *, rowtime AS time FROM student4
     EMIT CHANGES;
@@ -52,10 +52,10 @@ docker-compose exec -T ksqldb-cli ksql http://ksqldb-server:8088 <<-EOF
 
 
 
-    CREATE STREAM class AS SELECT * FROM student1_src EMIT CHANGES;
-    INSERT INTO  class SELECT * FROM student2_src EMIT CHANGES;
-    INSERT INTO  class SELECT * FROM student3_src EMIT CHANGES;
-    INSERT INTO  class SELECT * FROM student4_src EMIT CHANGES;
+    CREATE STREAM AS SELECT * FROM student1_src EMIT CHANGES;
+    INSERT INTO class SELECT * FROM student2_src EMIT CHANGES;
+    INSERT INTO class SELECT * FROM student3_src EMIT CHANGES;
+    INSERT INTO class SELECT * FROM student4_src EMIT CHANGES;
 
     CREATE OR REPLACE STREAM CLASS_BOOST WITH (
     kafka_topic = 'CLASS_BOOST',
